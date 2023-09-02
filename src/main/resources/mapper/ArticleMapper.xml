@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyl.mapper.ArticleMapper">
+
+    <resultMap id="ArticleMap" type="com.hyl.pojo.Article">
+        <result property="articleId" column="Article_Id"></result>
+        <result property="publishedTime" column="Published_Time"></result>
+    </resultMap>
+
+    <insert id="add">
+        insert into article (uid, Title, Content, Published_Time)
+        VALUES (#{uid}, #{title}, #{content}, #{publishedTime})
+    </insert>
+    <select id="selectAll" resultMap="ArticleMap">
+        select *
+        from article
+    </select>
+    <select id="selectByArticleId" resultMap="ArticleMap">
+        select *
+        from article
+        where Article_Id = #{articleId}
+    </select>
+</mapper>

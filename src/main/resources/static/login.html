@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #dbbbf5 65%, #acdbfc);
+            height: 100vh;
+        }
+
+        #main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            width: 500px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
+            0 3px 6px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .el-header {
+            font-size: 30px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .el-button {
+            width: 100%;
+        }
+
+        .el-footer {
+            height: 30px !important;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <div id="main">
+        <el-container>
+            <el-header>zjnu博客</el-header>
+            <el-main>
+                <el-form ref="user" :model="user" :rules="rules">
+                    <el-form-item prop="username">
+                        <el-input v-model="user.username" placeholder="用户名"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="password">
+                        <el-input type="password" v-model="user.password" placeholder="密码"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="login('user')">登录</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-main>
+            <el-footer>
+                <div style="text-align: center;">
+                    <a href="register.html" style="margin-right: 10px;">注册</a>
+                    <span>|</span>
+                    <a style="margin-left: 10px;">忘记密码</a>
+                </div>
+            </el-footer>
+        </el-container>
+    </div>
+</div>
+
+
+<script>
+    const vue = new Vue({
+        el: "#app",
+        data() {
+            return {
+                user: {
+                    username: "",
+                    password: "",
+                },
+                rules: {
+                    username: [
+                        {required: true, message: '请输入用户名', trigger: 'blur', type: 'string'},
+                        {max: 10, message: '用户名过长！'}
+                    ],
+                    password: [
+                        {required: true, message: '密码不符合要求，请输入6-12位！', trigger: 'blur', min: 6, max: 12},
+                    ]
+                }
+            }
+
+        },
+        methods: {
+            login(user) {
+                this.$refs[user].validate((valid) => {
+                    if (valid) {
+                        axios.post("http://localhost:80/user/login", this.user).then(res => {
+                            if (res.data.code == 200) {
+                                console.log("登录成功，准备跳转到主页");
+                                window.location.href = 'index.html'
+                            } else {
+                                this.$message.error(res.data.message)
+                            }
+                        })
+                    } else {
+                        console.log('error message!!!')
+                        return false;
+                    }
+                })
+            }
+        },
+    })
+</script>
+</body>
+</html>

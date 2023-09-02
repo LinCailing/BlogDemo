@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:font-size="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+        body {
+            margin: 0; /* 清除 body 的默认边距 */
+            font-family: Arial, sans-serif; /* 设置字体 */
+            overflow: hidden; /* 防止背景被内容遮挡 */
+        }
+
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('img/1.png');
+            background-size: cover;
+            background-blur: 10px; /* 此处不是标准属性，实际并不会生效 */
+            opacity: 0.5; /* 半透明效果 */
+            z-index: -1; /* 将背景层放在最底层 */
+        }
+
+        .el-col {
+            margin-top: 30px;
+        }
+
+        #edit {
+            height: 40px;
+            background-color: rgb(64, 158, 255);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            width: 100px;
+            border-radius: 5px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="background-overlay"></div>
+<div id="app">
+    <el-container>
+        <el-header>
+            <el-row>
+                <el-col :span="6">
+                    <el-breadcrumb separator="/">
+                        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                        <el-breadcrumb-item><a href="MyInfo.html">个人中心</a></el-breadcrumb-item>
+                    </el-breadcrumb>
+                </el-col>
+                <el-col :span="6">
+                    <el-input v-model="queryString" placeholder="请输入要查找的文章标题或作者"></el-input>
+                </el-col>
+                <el-col :span="2" style="margin-left: 50px;">
+                    <el-button type="primary" icon="el-icon-search" @click="select()">搜索</el-button>
+                </el-col>
+                <el-col :span="2">
+                    <div id="edit" style="margin-left: 30px;">
+                        <i class="el-icon-circle-plus-outline"></i>
+                        <a type="primary" href="edit.html" style="color: white; text-decoration: none">发布</a>
+                    </div>
+                </el-col>
+                <el-col :span="8" style="text-align: right;">
+                    <div style="position: absolute; top: 20px; right: 0;">
+                        <img src="img/logo.png" style="max-width: 200px; height: auto;">
+                    </div>
+                </el-col>
+
+            </el-row>
+        </el-header>
+        <el-main style="margin-top: 100px">
+            <li v-for="article in articles" :key="article.articleId" style="margin-right: 350px;margin-left: 350px" @click="showInfo(article.articleId)">
+                <div id="blog">
+                    <h1 style="font-size: 30px">{{article.title}}</h1>
+                </div>
+
+                    <div style="word-wrap: break-word;font-size: 20px">{{article.content}}</div>
+
+            </li>
+        </el-main>
+    </el-container>
+</div>
+
+
+<script>
+    const vue = new Vue({
+        el: "#app",
+        data() {
+            return {
+                queryString: "",
+                articles:"",
+            }
+        },
+        created(){
+            this.show()
+        },
+        methods: {
+            select() {
+                //未完待续
+            },
+            show(){
+                axios.get("/article/selectAll").then(res=>{
+                    if(res.data.code==200){
+                        this.articles=res.data.data
+                    }else {
+                        this.$message.error(res.data.message)
+                    }
+                })
+            },
+            showInfo(articleId){
+                window.location.href="article.html?articleId="+articleId
+            }
+        },
+    })
+</script>
+
+</body>
+</html>

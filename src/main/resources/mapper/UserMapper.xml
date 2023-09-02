@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyl.mapper.UserMapper">
+    <resultMap id="UserMap" type="com.hyl.pojo.User">
+        <result property="registrationTime" column="Registion_Time"></result>
+    </resultMap>
+    <insert id="add">
+        insert into user(User_Name,Password,Nick_Name,Registion_Time)
+        values (#{username}, #{password}, #{nickname}, #{registrationTime})
+    </insert>
+
+    <select id="selectAll" resultMap="UserMap">
+        select *
+        from user
+    </select>
+    <select id="selectByusername" resultMap="UserMap">
+        select *
+        from user
+        where User_Name = #{username}
+    </select>
+        </mapper>
